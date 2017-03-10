@@ -46,24 +46,22 @@ const cardTarget = {
     // When dragging rightwards, only move when the cursor is after 50%
     // When dragging leftwards, only move when the cursor is before 50%
 
-    // Dragging rightwards
-    if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
-      return;
+    const isDraggingRightwards = dragIndex < hoverIndex
+    const isHoverBeforeMiddle = hoverClientX < hoverMiddleX
+    const isDraggingLeftwards = dragIndex > hoverIndex
+    const isHoverAfterMiddle = hoverClientX > hoverMiddleX
+
+    if (isDraggingRightwards && isHoverAfterMiddle || isDraggingLeftwards && isHoverBeforeMiddle) {
+      // Time to actually perform the action
+      props.moveCard(dragIndex, hoverIndex);
+
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      monitor.getItem().index = hoverIndex;
     }
 
-    // Dragging leftwards
-    if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
-      return;
-    }
-
-    // Time to actually perform the action
-    props.moveCard(dragIndex, hoverIndex);
-
-    // Note: we're mutating the monitor item here!
-    // Generally it's better to avoid mutations,
-    // but it's good here for the sake of performance
-    // to avoid expensive index searches.
-    monitor.getItem().index = hoverIndex;
   }
 };
 
