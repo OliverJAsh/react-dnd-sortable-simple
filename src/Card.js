@@ -8,16 +8,16 @@ const style = {
   padding: '0.5rem 1rem',
   marginBottom: '.5rem',
   backgroundColor: 'white',
-  cursor: 'move',
+  cursor: 'move'
 };
 
 const cardSource = {
   beginDrag(props) {
     return {
       id: props.id,
-      index: props.index,
+      index: props.index
     };
-  },
+  }
 };
 
 const cardTarget = {
@@ -64,17 +64,16 @@ const cardTarget = {
     // but it's good here for the sake of performance
     // to avoid expensive index searches.
     monitor.getItem().index = hoverIndex;
-  },
+  }
 };
 
-@DropTarget(ItemTypes.CARD, cardTarget, connect => ({
-  connectDropTarget: connect.dropTarget(),
-}))
-@DragSource(ItemTypes.CARD, cardSource, (connect, monitor) => ({
+export default DropTarget(ItemTypes.CARD, cardTarget, connect => ({
+  connectDropTarget: connect.dropTarget()
+}))(DragSource(ItemTypes.CARD, cardSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging(),
-}))
-export default class Card extends Component {
+  isDragging: monitor.isDragging()
+}))(class Card extends Component {
+
   static propTypes = {
     connectDragSource: PropTypes.func.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
@@ -89,10 +88,10 @@ export default class Card extends Component {
     const { text, isDragging, connectDragSource, connectDropTarget } = this.props;
     const opacity = isDragging ? 0 : 1;
 
-    return connectDragSource(connectDropTarget(
-      <div style={{ ...style, opacity }}>
-        {text}
-      </div>,
-    ));
+    return connectDragSource(connectDropTarget(React.createElement(
+      'div',
+      { style: { ...style, opacity } },
+      text
+    )));
   }
-}
+}));

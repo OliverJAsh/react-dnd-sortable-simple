@@ -13,8 +13,6 @@ module.exports = {
                     presets: [
                     ],
                     plugins: [
-                        'babel-plugin-transform-react-jsx',
-                        'babel-plugin-transform-decorators-legacy',
                         'babel-plugin-transform-class-properties',
                         'babel-plugin-transform-object-rest-spread',
                     ],
