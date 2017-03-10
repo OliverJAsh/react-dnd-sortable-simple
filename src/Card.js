@@ -73,17 +73,6 @@ export default DropTarget(ItemTypes.CARD, cardTarget, connect => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))(class Card extends Component {
-
-  static propTypes = {
-    connectDragSource: PropTypes.func.isRequired,
-    connectDropTarget: PropTypes.func.isRequired,
-    index: PropTypes.number.isRequired,
-    isDragging: PropTypes.bool.isRequired,
-    id: PropTypes.any.isRequired,
-    text: PropTypes.string.isRequired,
-    moveCard: PropTypes.func.isRequired,
-  };
-
   render() {
     const { text, isDragging, connectDragSource, connectDropTarget } = this.props;
     const opacity = isDragging ? 0 : 1;
