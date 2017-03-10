@@ -38,15 +38,27 @@ export default DragDropContext(HTML5Backend)(class Container extends Component {
     };
   }
 
-  moveCard(dragIndex, hoverIndex) {
-    const { cards } = this.state;
-    const dragCard = cards[dragIndex];
-
+  moveCard(id, atIndex) {
+    const { card, index } = this.findCard(id);
     this.setState(update(this.state, {
       cards: {
-        $splice: [[dragIndex, 1], [hoverIndex, 0, dragCard]]
-      }
+        $splice: [
+          [index, 1],
+          [atIndex, 0, card],
+        ],
+      },
     }));
+  }
+
+  findCard(id) {
+    const { cards } = this.state;
+    // TODO: This could return undefined
+    const card = cards.filter(c => c.id === id)[0];
+
+    return {
+      card,
+      index: cards.indexOf(card),
+    };
   }
 
   render() {
@@ -60,7 +72,8 @@ export default DragDropContext(HTML5Backend)(class Container extends Component {
         index: i,
         id: card.id,
         text: card.text,
-        moveCard: this.moveCard
+        moveCard: this.moveCard.bind(this),
+        findCard: this.findCard.bind(this),
       }))
     );
   }
