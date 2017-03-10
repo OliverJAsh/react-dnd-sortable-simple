@@ -5,7 +5,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Card from './Card';
 
 const style = {
-  width: 400,
+  display: 'flex',
 };
 
 export default DragDropContext(HTML5Backend)(class Container extends Component {
