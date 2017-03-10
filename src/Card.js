@@ -26,40 +26,38 @@ const cardTarget = {
     const hoverIndex = props.index;
 
     // Don't replace items with themselves
-    if (dragIndex === hoverIndex) {
-      return;
-    }
+    if (dragIndex !== hoverIndex) {
+      // Determine rectangle on screen
+      const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
 
-    // Determine rectangle on screen
-    const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+      // Get horizontal middle
+      const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
 
-    // Get horizontal middle
-    const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
 
-    // Determine mouse position
-    const clientOffset = monitor.getClientOffset();
+      // Get pixels to the left
+      const hoverClientX = clientOffset.x - hoverBoundingRect.left;
 
-    // Get pixels to the left
-    const hoverClientX = clientOffset.x - hoverBoundingRect.left;
+      // Only perform the move when the mouse has crossed half of the items width
+      // When dragging rightwards, only move when the cursor is after 50%
+      // When dragging leftwards, only move when the cursor is before 50%
 
-    // Only perform the move when the mouse has crossed half of the items width
-    // When dragging rightwards, only move when the cursor is after 50%
-    // When dragging leftwards, only move when the cursor is before 50%
+      const isDraggingRightwards = dragIndex < hoverIndex
+      const isHoverBeforeMiddle = hoverClientX < hoverMiddleX
+      const isDraggingLeftwards = dragIndex > hoverIndex
+      const isHoverAfterMiddle = hoverClientX > hoverMiddleX
 
-    const isDraggingRightwards = dragIndex < hoverIndex
-    const isHoverBeforeMiddle = hoverClientX < hoverMiddleX
-    const isDraggingLeftwards = dragIndex > hoverIndex
-    const isHoverAfterMiddle = hoverClientX > hoverMiddleX
+      if (isDraggingRightwards && isHoverAfterMiddle || isDraggingLeftwards && isHoverBeforeMiddle) {
+        // Time to actually perform the action
+        props.moveCard(dragIndex, hoverIndex);
 
-    if (isDraggingRightwards && isHoverAfterMiddle || isDraggingLeftwards && isHoverBeforeMiddle) {
-      // Time to actually perform the action
-      props.moveCard(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      monitor.getItem().index = hoverIndex;
+        // Note: we're mutating the monitor item here!
+        // Generally it's better to avoid mutations,
+        // but it's good here for the sake of performance
+        // to avoid expensive index searches.
+        monitor.getItem().index = hoverIndex;
+      }
     }
 
   }
