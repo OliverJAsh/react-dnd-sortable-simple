@@ -12,6 +12,7 @@ const style = {
 };
 
 const cardSource = {
+  // Return the data describing the dragged item
   beginDrag(props) {
     return {
       id: props.id,
