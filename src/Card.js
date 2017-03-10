@@ -16,12 +16,29 @@ const cardSource = {
   beginDrag(props) {
     return {
       id: props.id,
-      index: props.index
+      // Mutated
+      index: props.index,
+      // Not mutated
+      originalIndex: props.index,
     };
-  }
+  },
+
+  endDrag(props, monitor) {
+    const { index, originalIndex } = monitor.getItem();
+    const didDrop = monitor.didDrop();
+
+    // If drop was cancelled, move it back
+    if (!didDrop) {
+      props.moveCard(index, originalIndex);
+    }
+  },
 };
 
 const cardTarget = {
+  // canDrop() {
+  //   return false;
+  // },
+
   hover(props, monitor, component) {
     const dragIndex = monitor.getItem().index;
     const hoverIndex = props.index;
